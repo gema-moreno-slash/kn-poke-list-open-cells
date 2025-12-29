@@ -17,6 +17,27 @@
 import { css } from 'lit';
 
 export const styles = css`
+  main {
+    flex: 1;
+    position: relative;
+  }
+
+  main ::slotted(*) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    visibility: hidden;
+  }
+
+  main ::slotted([state="active"]) {
+    visibility: visible;
+  }
+  `;
+
+/*
+export const styles = css`
   :host {
     display: flex;
     flex-direction: column;
@@ -42,3 +63,4 @@ export const styles = css`
     visibility: visible;
   }
   `;
+*/

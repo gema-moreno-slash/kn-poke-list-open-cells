@@ -1,9 +1,9 @@
 import { LitElement, html, css, unsafeCSS } from "lit";
-import bulma from 'bulma/css/bulma.css?inline';
+// import bulma from 'bulma/css/bulma.css?inline';
 
 class MainHeader extends LitElement {
     static styles = [
-        unsafeCSS(bulma),
+        // unsafeCSS(bulma),
         css`
             .mainCont {
                 padding: 2rem 2rem;
