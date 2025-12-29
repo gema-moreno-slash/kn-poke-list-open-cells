@@ -1,0 +1,61 @@
+# =========================
+# Node.js
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# Entornos
+# =========================
+.env
+.env.local
+.env.*.local
+
+# =========================
+# Build / Bundlers
+# =========================
+dist/
+build/
+out/
+
+# Vite
+.vite/
+
+# Rollup
+.rollup.cache/
+
+# Web Dev Server (Lit)
+.web-dev-server/
+
+# =========================
+# Testing
+# =========================
+coverage/
+
+# =========================
+# Cache
+# =========================
+.cache/
+.parcel-cache/
+
+# =========================
+# IDEs / Editores
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# Sistema Operativo
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Otros
+# =========================
+*.log
