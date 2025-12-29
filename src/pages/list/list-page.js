@@ -1,19 +1,13 @@
 import { LitElement, html, css, nothing, unsafeCSS } from "lit";
 import { PageController } from '@open-cells/page-controller';
-// import { getAllPokemon, getPokemon } from '../service/poke-service';
+import { getAllPokemon, getPokemon } from '../../service/poke-service.js';
 import { map } from 'lit/directives/map.js';
 import bulma from 'bulma/css/bulma.css?inline';
-// import '../components/loading-warn';
+import '../../components/loading-warn.js';
 
 const LIMIT = 5;
 
 class ListPage extends LitElement {
-
-    pageController = new PageController(this);
-
-    createRenderRoot() {
-        return this;
-    }
 
     static styles = [
         unsafeCSS(bulma),
@@ -38,11 +32,6 @@ class ListPage extends LitElement {
             }
         `
     ]
-
-/*
-    static shadowRootOptions = {...LitElement.shadowRootOptions, mode: "open"};
-
-
 
     static properties = {
         pokeList: {state: true},
@@ -168,14 +157,6 @@ class ListPage extends LitElement {
             detail: { page: this.page }
         });
         this.dispatchEvent(event);
-    }
-        */
-
-    render() {
-        return html`
-            <button @click="${() => this.pageController.navigate('detail')}">Detail</button>
-            <p>List Page</p>
-        `;
     }
 }
 
