@@ -6,10 +6,6 @@ import { customElement } from 'lit/decorators.js';
 export class SecondPage extends LitElement {
   pageController = new PageController(this);
 
-  protected createRenderRoot(): HTMLElement | DocumentFragment {
-    return this;
-  }
-
   render() {
     return html`
       <button @click="${() => this.pageController.navigate('home')}">Go to home page</button>

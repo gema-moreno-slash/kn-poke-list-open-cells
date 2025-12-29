@@ -2,7 +2,7 @@ import { LitElement, html, css, nothing, unsafeCSS } from "lit";
 import { PageController } from '@open-cells/page-controller';
 // import { getAllPokemon, getPokemon } from '../service/poke-service';
 import { map } from 'lit/directives/map.js';
-// import bulma from 'bulma/css/bulma.css?inline';
+import bulma from 'bulma/css/bulma.css?inline';
 // import '../components/loading-warn';
 
 const LIMIT = 5;
@@ -14,9 +14,6 @@ class ListPage extends LitElement {
     createRenderRoot() {
         return this;
     }
-
-/*
-    static shadowRootOptions = {...LitElement.shadowRootOptions, mode: "open"};
 
     static styles = [
         unsafeCSS(bulma),
@@ -41,6 +38,11 @@ class ListPage extends LitElement {
             }
         `
     ]
+
+/*
+    static shadowRootOptions = {...LitElement.shadowRootOptions, mode: "open"};
+
+
 
     static properties = {
         pokeList: {state: true},

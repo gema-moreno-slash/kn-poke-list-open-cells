@@ -8,11 +8,6 @@ import '../../components/main-subhead';
 export class HomePage extends LitElement {
   pageController = new PageController(this);
 
-  protected createRenderRoot(): HTMLElement | DocumentFragment {
-    // @ts-ignore
-    return this;
-  }
-
   render() {
     return html`
       <main-subhead title="test Sub" back="true"></main-subhead>

@@ -1,10 +1,9 @@
 import { startApp } from '@open-cells/core';
-import { LitElement, PropertyDeclarations, html } from 'lit';
+import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { ElementController } from '@open-cells/element-controller';
 import { routes } from '../router/routes.js';
 import { styles } from './app-index.css.js';
-import '../components/main-header.js'
+import './main-header.js'
 
 startApp({
   routes,
@@ -14,24 +13,36 @@ startApp({
 const mainLayoutPages = ['list-page', 'detail-page'];
 const testLayoutPages = ['test-home', 'test-second'];
 
-@customElement('app-index')
 export class AppIndex extends LitElement {
-  // elementController = new ElementController(this);
 
   static styles = styles;
-/*
+
   constructor() {
     super();
-    const url = window.location;
-    console.log(url);
-  }*/
-
-  renderMainLayout() {
-
+    const path = window.location;
+    console.log(path)
   }
 
-  renderTestLayout() {
+  renderMainLayout(content) {
+    return html`
+      <div>
+        <main-header></main-header>
+        <main role="main" tabindex="-1">
+          ${content}
+        </main>
+      </div>
+    `;
+  }
 
+  renderTestLayout(content) {
+    return html`
+      <div>
+        <main-header></main-header>
+        <main role="main" tabindex="-1">
+          ${content}
+        </main>
+      </div>
+    `;
   }
 
   render() {
@@ -45,3 +56,5 @@ export class AppIndex extends LitElement {
     `;
   }
 }
+
+customElements.define('app-index', AppIndex);
