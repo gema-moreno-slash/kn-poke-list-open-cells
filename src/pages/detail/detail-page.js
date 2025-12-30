@@ -1,4 +1,5 @@
 import { LitElement, html, css, nothing, unsafeCSS } from "lit";
+import { Task } from '@lit/task';
 import { PageController } from '@open-cells/page-controller';
 import { getPokemon } from '../../service/poke-service';
 import { map } from 'lit/directives/map.js';
@@ -13,10 +14,7 @@ class DetailPage extends LitElement {
 
     static properties = {
         // name: { type: String },
-        poke: { state: true },
-        loading: { state: true },
-        error: { state: false },
-        params: {type: Object}
+        poke: { state: true }
     }
 
     static styles = [
@@ -48,30 +46,27 @@ class DetailPage extends LitElement {
         this.error = false;
     }
 
+    pokeTask = new Task(this, {
+        task: async ([name]) => {
+            const response = await getPokemon(name)
+            return response.data;
+        },
+        args: () => [this.poke]
+    });
+
     connectedCallback() {
         super.connectedCallback();
     }
 
     onPageEnter() {
-        if(!this.poke || this.pageController.getCurrentRoute().params.name !== this.poke.name) {
-            this.loading = true;
-            // Fake loading delay
-            setTimeout(() => {
-                getPokemon(this.pageController.getCurrentRoute().params.name)
-                    .then(result => this.poke = result.data)
-                    .catch(err => {
-                        this.error = true;
-                        console.log(err);
-                    })
-                    .finally(() => this.loading = false)
-            }, 1000)
-        }
+        console.log('Entering detail page', this.pageController.getCurrentRoute().params.name);
+        this.poke = this.pageController.getCurrentRoute().params.name;
     }
 
-    renderDetail() {
-        const height = html`${this.poke.height * 10} cm`;
-        const weight = html`${this.poke.weight / 10} kg`;
-        const types = map(this.poke.types, (t) => html`<span class="tag is-capitalized">${t.type.name}</span>`)
+    renderDetail(poke) {
+        const height = html`${poke.height * 10} cm`;
+        const weight = html`${poke.weight / 10} kg`;
+        const types = map(poke.types, (t) => html`<span class="tag is-capitalized">${t.type.name}</span>`)
 
         return html`
             <div class="card">
@@ -79,12 +74,12 @@ class DetailPage extends LitElement {
                     <div class="media">
                         <div class="media-left">
                             <figure class="image">
-                                <img class="pic" src=${this.poke.sprites.front_default} />
+                                <img class="pic" src=${poke.sprites.front_default} />
                             </figure>
                         </div>
                         <div class="media-content">
-                            <p class="is-capitalized title is-4">${this.poke.name}</p>
-                            <p class="subtitle is-6"># ${this.poke.id}</p>
+                            <p class="is-capitalized title is-4">${poke.name}</p>
+                            <p class="subtitle is-6"># ${poke.id}</p>
                         </div>
                     </div>
                     <div>
@@ -104,14 +99,13 @@ class DetailPage extends LitElement {
     }
 
     render() {
-        const loadingTpl = html`<loading-warn></loading-warn>`;
-        const errorTpl = html`<p>Hubo un error</p>`;
-
         return html`
             <main-subhead title="Detail" back="true"></main-subhead>
-            ${this.loading ? loadingTpl : nothing}
-            ${!this.loading && this.poke ? this.renderDetail() : nothing}
-            ${!this.loading && this.error ? errorTpl : nothing}
+            ${this.pokeTask.render({
+                pending: () => html`<loading-warn></loading-warn>`,
+                complete: (poke) => html`${this.renderDetail(poke)}`,
+                error: (e) => html`<p>Hubo un error</p>`
+            })}
         `;
     }
 
