@@ -45,7 +45,7 @@ export class AppIndex extends LitElement {
 
   renderMainLayout(content) {
     return html`
-      <div>
+      <div class="mainCont">
         <main-header></main-header>
         ${content}
         <main-footer></main-footer>

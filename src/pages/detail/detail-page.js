@@ -52,10 +52,6 @@ class DetailPage extends LitElement {
         args: () => [this.poke]
     });
 
-    connectedCallback() {
-        super.connectedCallback();
-    }
-
     onPageEnter() {
         console.log('Entering detail page', this.pageController.getCurrentRoute().params.name);
         this.poke = this.pageController.getCurrentRoute().params.name;
