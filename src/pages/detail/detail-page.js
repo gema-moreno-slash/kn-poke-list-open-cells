@@ -21,7 +21,6 @@ class DetailPage extends LitElement {
 
     constructor() {
         super();
-        this.loading = true;
         this.error = false;
     }
 
@@ -51,17 +50,24 @@ class DetailPage extends LitElement {
 
     connectedCallback() {
         super.connectedCallback();
-        // Fake loading delay
+    }
 
-        setTimeout(() => {
-            getPokemon(this.pageController.getCurrentRoute().params.name)
-                .then(result => this.poke = result.data)
-                .catch(err => {
-                    this.error = true;
-                    console.log(err);
-                })
-                .finally(() => this.loading = false)
-        }, 1000)
+    onPageEnter() {
+        console.log(this.pageController.getCurrentRoute().params.name)
+        console.log(this.poke)
+        if(!this.poke || this.pageController.getCurrentRoute().params.name !== this.poke.name) {
+            this.loading = true;
+            // Fake loading delay
+            setTimeout(() => {
+                getPokemon(this.pageController.getCurrentRoute().params.name)
+                    .then(result => this.poke = result.data)
+                    .catch(err => {
+                        this.error = true;
+                        console.log(err);
+                    })
+                    .finally(() => this.loading = false)
+            }, 1000)
+        }
     }
 
     renderDetail() {
