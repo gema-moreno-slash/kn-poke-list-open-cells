@@ -13,7 +13,6 @@ class DetailPage extends LitElement {
     pageController = new PageController(this);
 
     static properties = {
-        // name: { type: String },
         poke: { state: true }
     }
 
@@ -48,8 +47,7 @@ class DetailPage extends LitElement {
 
     pokeTask = new Task(this, {
         task: async ([name]) => {
-            const response = await getPokemon(name)
-            return response.data;
+            return await getPokemon(name);
         },
         args: () => [this.poke]
     });

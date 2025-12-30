@@ -7,9 +7,15 @@ function getAllPokemon(skip = 0, limit = LIMIT) {
     return axios.get(`${API_URL}pokemon?limit=${limit}&offset=${skip}`);
 }
 
-function getPokemon(name) {
-    return axios.get(`${API_URL}pokemon/${name}`);
+async function getPokemon(name) {
+    const response = await fetch(`${API_URL}pokemon/${name}`);
+
+    if (!response.ok) {
+        throw new Error(`Error ${response.status}: Pokémon no encontrado`);
+    }
+    return response.json();
 }
+
 
 export {
     getAllPokemon,
