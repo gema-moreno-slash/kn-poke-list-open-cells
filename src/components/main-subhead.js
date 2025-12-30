@@ -1,7 +1,10 @@
 import { LitElement, html, css, unsafeCSS, nothing } from "lit";
+import {ElementController} from '@open-cells/element-controller';
 import bulma from 'bulma/css/bulma.css?inline';
 
 class MainSubhead extends LitElement {
+
+    elementController = new ElementController(this);
     
     static styles = [
         unsafeCSS(bulma),
@@ -27,7 +30,7 @@ class MainSubhead extends LitElement {
     render() {
         return html`
             <div class="subHeader">
-                ${this.back ? html`<button class="button is-primary is-link" @click=${() => window.history.back()}>Back</button>` : nothing }
+                ${this.back ? html`<button class="button is-primary is-link" @click=${() => this.elementController.navigate('list')}>Back</button>` : nothing }
                 <h2 class="title is-2">${this.title}</h2>
             </div>
         `;
