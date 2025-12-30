@@ -1,7 +1,11 @@
 import { LitElement, html, css, unsafeCSS } from "lit";
+import {ElementController} from '@open-cells/element-controller';
+import { map } from 'lit/directives/map.js';
 import bulma from 'bulma/css/bulma.css?inline';
 
 class MainHeader extends LitElement {
+
+    elementController = new ElementController(this);
 
     static styles = [
         unsafeCSS(bulma),
@@ -23,6 +27,25 @@ class MainHeader extends LitElement {
         `
     ]
 
+    static properties = {
+        favs: {state: true}
+    }
+
+    constructor() {
+        super();
+        this.favs = [];
+        this.handleConnections();
+    }
+
+    handleConnections() {
+        this.elementController.subscribe('ch_favs_inc', (poke) => {
+            this.favs = [...this.favs, poke];
+        });
+        this.elementController.subscribe('ch_favs_ex', (poke) => {
+            this.favs = this.favs.filter(p => p !== poke);
+        });
+    }
+
     render() {
         return html`
             <header class="mainCont">
@@ -30,16 +53,13 @@ class MainHeader extends LitElement {
                     <h1 class="title is-1">KN - Pokemon List</h1>
                 </div>
                 <div class="actions">
-                    <div class="control has-icons-left">
+                    <div class="control">
                         <div class="select">
                             <select>
-                                <option selected>Dark</option>
-                                <option>Light</option>
+                                <option selected>Favs</option>
+                                ${map(this.favs, (f) => html`<option>${f}</option>`)}
                             </select>
                         </div>
-                        <span class="icon is-left">
-                            <i class="fas fa-globe"></i>
-                        </span>
                     </div>
                 </div>
             </header>

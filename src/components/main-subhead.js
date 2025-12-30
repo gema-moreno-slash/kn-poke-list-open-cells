@@ -2,6 +2,7 @@ import { LitElement, html, css, unsafeCSS, nothing } from "lit";
 import bulma from 'bulma/css/bulma.css?inline';
 
 class MainSubhead extends LitElement {
+    
     static styles = [
         unsafeCSS(bulma),
         css`

@@ -39,7 +39,8 @@ class ListPage extends LitElement {
     static properties = {
         pokeList: {state: true},
         loading: {state: true},
-        error: {state: false}
+        error: {state: false},
+        favs: {state: true}
     }
 
     page = 0;
@@ -50,6 +51,19 @@ class ListPage extends LitElement {
         this.pokeList = [];
         this.loading = true;
         this.error = false;
+        this.favs = [];
+        this.handleConnections();
+    }
+
+    handleConnections() {
+        this.pageController.subscribe('ch_favs_inc', (poke) => {
+            console.log('list-page inc', poke);
+            this.favs = [...this.favs, poke];
+        });
+        this.pageController.subscribe('ch_favs_ex', (poke) => {
+            console.log('list-page ex', poke);
+            this.favs = this.favs.filter(p => p !== poke);
+        });
     }
 
     connectedCallback() {
@@ -113,6 +127,7 @@ class ListPage extends LitElement {
                                 <th>Pic</th>
                                 <th>Name</th>
                                 <th>Detail</th>
+                                <th>Fav</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -127,6 +142,11 @@ class ListPage extends LitElement {
                                                 @click="${() => this.pageController.navigate('detail', {name: poke.name})}"
                                             >
                                                 Detail
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button @click="${() => this.isFav(poke.name) ? this.excludeToFav(poke.name) : this.includeToFav(poke.name)}">
+                                                ${this.isFav(poke.name) ? '❤️' : '🖤'}
                                             </button>
                                         </td>
                                     </tr>
@@ -152,6 +172,18 @@ class ListPage extends LitElement {
             ${!this.loading && this.pokeList ? this.renderTable() : nothing}
             ${!this.loading && this.error ? errorTpl : nothing}
         `;
+    }
+
+    isFav(name) {
+        return this.favs.find(p => p === name);
+    }
+
+    includeToFav(name) {
+        this.pageController.publish('ch_favs_inc', name);
+    }
+
+    excludeToFav(name) {
+        this.pageController.publish('ch_favs_ex', name);
     }
 
     prev() {
