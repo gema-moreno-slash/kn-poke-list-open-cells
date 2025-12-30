@@ -4,10 +4,13 @@ import { getAllPokemon, getPokemon } from '../../service/poke-service.js';
 import { map } from 'lit/directives/map.js';
 import bulma from 'bulma/css/bulma.css?inline';
 import '../../components/loading-warn.js';
+import '../../components/main-subhead.js';
 
 const LIMIT = 5;
 
 class ListPage extends LitElement {
+
+    pageController = new PageController(this);
 
     static styles = [
         unsafeCSS(bulma),
@@ -118,7 +121,14 @@ class ListPage extends LitElement {
                                         <td>${poke.id}</td>
                                         <td><img class="pic" src=${poke.pic} /></td>
                                         <td class="is-capitalized">${poke.name}</td>
-                                        <td><a class="button" href="/detail/${poke.name}">Detail</a></td>
+                                        <td>
+                                            <button 
+                                                class="button"
+                                                @click="${() => this.pageController.navigate('detail', {name: poke.name})}"
+                                            >
+                                                Detail
+                                            </button>
+                                        </td>
                                     </tr>
                                 `)}
                         </tbody>
@@ -137,6 +147,7 @@ class ListPage extends LitElement {
         const errorTpl = html`<p>Hubo un error</p>`;
 
         return html`
+            <main-subhead title="List"></main-subhead>
             ${this.loading ? loadingTpl : nothing}
             ${!this.loading && this.pokeList ? this.renderTable() : nothing}
             ${!this.loading && this.error ? errorTpl : nothing}

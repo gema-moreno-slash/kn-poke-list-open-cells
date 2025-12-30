@@ -1,26 +1,22 @@
 import { LitElement, html, css, nothing, unsafeCSS } from "lit";
 import { PageController } from '@open-cells/page-controller';
-//import { getPokemon } from '../service/poke-service';
+import { getPokemon } from '../../service/poke-service';
 import { map } from 'lit/directives/map.js';
-//import bulma from 'bulma/css/bulma.css?inline';
-//import '../components/poke-desc';
-//import '../components/loading-warn';
+import bulma from 'bulma/css/bulma.css?inline';
+import '../../components/poke-desc';
+import '../../components/loading-warn';
+import '../../components/main-subhead.js';
 
 class DetailPage extends LitElement {
 
-
     pageController = new PageController(this);
 
-    createRenderRoot() {
-        return this;
-    }
-
-    /*
     static properties = {
-        name: { type: String },
+        // name: { type: String },
         poke: { state: true },
         loading: { state: true },
-        error: { state: false }
+        error: { state: false },
+        params: {type: Object}
     }
 
     constructor() {
@@ -56,8 +52,9 @@ class DetailPage extends LitElement {
     connectedCallback() {
         super.connectedCallback();
         // Fake loading delay
+
         setTimeout(() => {
-            getPokemon(this.name)
+            getPokemon(this.pageController.getCurrentRoute().params.name)
                 .then(result => this.poke = result.data)
                 .catch(err => {
                     this.error = true;
@@ -68,7 +65,6 @@ class DetailPage extends LitElement {
     }
 
     renderDetail() {
-
         const height = html`${this.poke.height * 10} cm`;
         const weight = html`${this.poke.weight / 10} kg`;
         const types = map(this.poke.types, (t) => html`<span class="tag is-capitalized">${t.type.name}</span>`)
@@ -108,19 +104,13 @@ class DetailPage extends LitElement {
         const errorTpl = html`<p>Hubo un error</p>`;
 
         return html`
+            <main-subhead title="Detail" back="true"></main-subhead>
             ${this.loading ? loadingTpl : nothing}
             ${!this.loading && this.poke ? this.renderDetail() : nothing}
             ${!this.loading && this.error ? errorTpl : nothing}
         `;
     }
-        */
 
-    render() {
-        return html`
-        <button @click="${() => this.pageController.navigate('list')}">List</button>
-        <p>Detail Page</p>
-        `;
-    }
 }
 
 customElements.define('detail-page', DetailPage);
