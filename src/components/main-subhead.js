@@ -30,7 +30,10 @@ class MainSubhead extends LitElement {
     render() {
         return html`
             <div class="subHeader">
-                ${this.back ? html`<button class="button is-primary is-link" @click=${() => this.elementController.navigate('list')}>Back</button>` : nothing }
+                ${this.back 
+                    ? html`<button class="button is-primary is-link" @click=${() => this.elementController.navigate('list')}>Back</button>` 
+                    : nothing 
+                }
                 <h2 class="title is-2">${this.title}</h2>
             </div>
         `;
