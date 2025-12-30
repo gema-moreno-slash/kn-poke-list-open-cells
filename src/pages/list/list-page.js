@@ -57,11 +57,9 @@ class ListPage extends LitElement {
 
     handleConnections() {
         this.pageController.subscribe('ch_favs_inc', (poke) => {
-            console.log('list-page inc', poke);
             this.favs = [...this.favs, poke];
         });
         this.pageController.subscribe('ch_favs_ex', (poke) => {
-            console.log('list-page ex', poke);
             this.favs = this.favs.filter(p => p !== poke);
         });
     }

@@ -37,7 +37,7 @@ export class AppIndex extends LitElement {
       main ::slotted([state="active"]) {
         display: block;
       }
-      main ::slotted([state="inactive"]) {
+      main ::slotted(:not([state="active"])) {
         display: none;
       }
     `

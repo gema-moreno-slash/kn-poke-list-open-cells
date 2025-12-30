@@ -55,15 +55,20 @@ class MainHeader extends LitElement {
                 <div class="actions">
                     <div class="control">
                         <div class="select">
-                            <select>
-                                <option selected>Favs</option>
-                                ${map(this.favs, (f) => html`<option>${f}</option>`)}
+                            <select @change=${this.selectFav}>
+                                <option selected value="default">Favs</option>
+                                ${map(this.favs, (f) => html`<option value="${f}">${f}</option>`)}
                             </select>
                         </div>
                     </div>
                 </div>
             </header>
         `;
+    }
+
+    selectFav(event) {
+        const name = event.target.value;
+        name !== 'default' && this.elementController.navigate('detail', {name})
     }
 }
 

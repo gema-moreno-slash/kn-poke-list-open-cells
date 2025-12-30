@@ -19,11 +19,6 @@ class DetailPage extends LitElement {
         params: {type: Object}
     }
 
-    constructor() {
-        super();
-        this.error = false;
-    }
-
     static styles = [
         unsafeCSS(bulma),
         css`
@@ -48,13 +43,16 @@ class DetailPage extends LitElement {
         `
     ]
 
+    constructor() {
+        super();
+        this.error = false;
+    }
+
     connectedCallback() {
         super.connectedCallback();
     }
 
     onPageEnter() {
-        console.log(this.pageController.getCurrentRoute().params.name)
-        console.log(this.poke)
         if(!this.poke || this.pageController.getCurrentRoute().params.name !== this.poke.name) {
             this.loading = true;
             // Fake loading delay
