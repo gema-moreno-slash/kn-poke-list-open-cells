@@ -89,10 +89,11 @@ class ListPage extends LitElement {
                 return Promise.all(result.data.results.map(poke => getPokemon(poke.name)))
             })
             .then(list => {
+                console.log(list);
                 this.pokeList = list.map(e => ({
-                    id: e.data.id,
-                    pic: e.data.sprites.front_default,
-                    name: e.data.name
+                    id: e.id,
+                    pic: e.sprites.front_default,
+                    name: e.name
                 }));
             })
             .catch(err => {
