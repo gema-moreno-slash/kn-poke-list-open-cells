@@ -1,5 +1,5 @@
 import { LitElement, html, css, unsafeCSS } from "lit";
-import {ElementController} from '@open-cells/element-controller';
+import { ElementController } from '@open-cells/element-controller';
 import { map } from 'lit/directives/map.js';
 import bulma from 'bulma/css/bulma.css?inline';
 
@@ -53,6 +53,7 @@ class MainHeader extends LitElement {
                     <h1 class="title is-1">KN - Pokemon List</h1>
                 </div>
                 <div class="actions">
+                    <button class="button is-primary" @click=${this.newPoke}>New Pokemon</button>
                     <div class="control">
                         <div class="select">
                             <select @change=${this.selectFav}>
@@ -64,6 +65,10 @@ class MainHeader extends LitElement {
                 </div>
             </header>
         `;
+    }
+
+    newPoke() {
+        this.elementController.publish('ch-newpoke', 'open');
     }
 
     selectFav(event) {

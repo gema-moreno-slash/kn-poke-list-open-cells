@@ -1,10 +1,12 @@
 import { startApp } from '@open-cells/core';
-import { LitElement, html, css, unsafeCSS } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { LitElement, html, css, unsafeCSS, nothing } from 'lit';
+import { ElementController } from '@open-cells/element-controller';
+import { customElement, state } from 'lit/decorators.js';
 import { routes } from '../router/routes.js';
 import bulma from 'bulma/css/bulma.css?inline';
 import './main-header.js';
-import './main-footer.js'
+import './main-footer.js';
+import './modal-cont.js';
 
 startApp({
   routes,
@@ -50,6 +52,7 @@ export class AppIndex extends LitElement {
         ${content}
         <main-footer></main-footer>
       </div>
+      <modal-cont></modal-cont>
     `;
   }
 
