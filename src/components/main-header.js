@@ -19,6 +19,7 @@ class MainHeader extends LitElement {
                 display: flex;
                 justify-content: flex-end;
                 align-items: center;
+                gap: 2rem;
             }
             .pic {
                 height: 96px;
@@ -53,7 +54,7 @@ class MainHeader extends LitElement {
                     <h1 class="title is-1">KN - Pokemon List</h1>
                 </div>
                 <div class="actions">
-                    <button class="button is-primary" @click=${this.newPoke}>New Pokemon</button>
+                    <button class="button is-primary" @click=${this.newPoke}>New</button>
                     <div class="control">
                         <div class="select">
                             <select @change=${this.selectFav}>

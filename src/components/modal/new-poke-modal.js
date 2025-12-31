@@ -1,5 +1,7 @@
 import { LitElement, html, css, nothing, unsafeCSS } from "lit";
 import { ElementController } from '@open-cells/element-controller';
+import { classMap } from "lit/directives/class-map.js";
+import { createPokemon } from '../../service/poke-service';
 import bulma from 'bulma/css/bulma.css?inline';
 import "./base-modal";
 import "../poke-form";
@@ -10,7 +12,7 @@ class NewPokeModal extends LitElement {
 
     static styles = [
         css`
-            form {
+            form fieldset {
                 display: flex;
                 flex-direction: column;
                 gap: 2rem;
@@ -18,10 +20,24 @@ class NewPokeModal extends LitElement {
 
             .actions {
                 display: flex;
-                justify-content: end;
+            }
+
+            .actions p {
+                flex-grow: 1;
             }
         `
     ]
+
+    static properties = {
+        message: {state: true},
+        disabled: {state: true}
+    }
+
+    constructor() {
+        super();
+        this.message = '';
+        this.disabled = false;
+    }
 
     render() {
         const poke = {
@@ -33,12 +49,25 @@ class NewPokeModal extends LitElement {
                 @close=${this.handleClose}
             >
                 <form @submit=${this.submitForm}>
-                    <div>
-                        <poke-form @update=${this.updateForm}></poke-form>
-                    </div>
-                    <div class="actions">
-                        <button type="submit" class="button is-primary">Crear</button>
-                    </div>
+                    <fieldset ?disabled=${this.disabled}>
+                        <div>
+                            <poke-form @update=${this.updateForm}></poke-form>
+                        </div>
+                        <div class="actions">
+                            <p>${this.message}</p>
+                            <button 
+                                type="submit" 
+                                class="button is-primary"
+                                class=${classMap({
+                                    button: true,
+                                    ["is-primary"]: true,
+                                    ["is-loading"]: this.disabled,
+                                })}
+                            >
+                                Crear
+                            </button>
+                        </div>
+                    <fieldset id="formFieldset">
                 </form>
             </base-modal>
         `;
@@ -50,9 +79,27 @@ class NewPokeModal extends LitElement {
 
     submitForm(e) {
         e.preventDefault();
+        this.disabled = true;
+
         const form = this.renderRoot.querySelector('form');
         const fd = new FormData(form);
-        console.log(fd.getAll('types'));
+        const newPoke = {
+            name: fd.get('name'),
+            height: fd.get('height'),
+            weight: fd.get('weight'),
+            types: fd.get('types'),
+        }
+        
+        this.createPokemon()
+    }
+
+    createPokemon(poke) {
+        setTimeout(() => {
+            createPokemon(poke)
+                .then(res => this.message = JSON.stringify(res))
+                .catch(err => this.message = err.message)
+                .finally(() => this.disabled = false)
+        }, 2000)
     }
 
     handleClose() {

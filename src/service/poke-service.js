@@ -16,8 +16,13 @@ async function getPokemon(name) {
     return response.json();
 }
 
+function createPokemon(poke) {
+    return axios.post(`${API_URL}pokemon`, poke);
+}
+
 
 export {
     getAllPokemon,
-    getPokemon
+    getPokemon,
+    createPokemon
 }
