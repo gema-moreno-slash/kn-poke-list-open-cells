@@ -23,8 +23,12 @@ export class ModalCont extends LitElement {
   handleNewPokeModal(command) {
     console.log('handleNewPokeModal', command);
     switch(command) {
-      case 'open':
-        this.openNewPokeModal = true;
+        case 'open':
+            this.openNewPokeModal = true;
+            break;
+        case 'close':
+        case 'cancel':
+            this.openNewPokeModal = false;
     }
   }
 

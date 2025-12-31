@@ -17,11 +17,6 @@ const defaultValues = {
 
 class PokeForm extends LitElement {
 
-    static properties = {
-        pokeForm: { state: true },
-        poke: { type: Object }
-    }
-
     createRenderRoot() {
         return this;
     }
@@ -29,21 +24,6 @@ class PokeForm extends LitElement {
     constructor() {
         super();
         this.pokeForm = { ...defaultValues };
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-        this.initForm();
-    }
-
-    initForm() {
-        const form = this.shadowRoot.querySelector('form');
-        /*
-        form.elements['name'].value = this.pokeForm.name;
-        form.elements['height'].value = this.pokeForm.height;
-        form.elements['weight'].value = this.pokeForm.weight;
-        form.elements['types'].value = this.pokeForm.types;
-        */
     }
 
     renderStyle() {
