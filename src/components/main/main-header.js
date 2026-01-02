@@ -69,7 +69,7 @@ class MainHeader extends LitElement {
     }
 
     newPoke() {
-        this.elementController.publish('ch-newpoke', 'open');
+        this.elementController.publish('ch_newpoke', 'open');
     }
 
     selectFav(event) {

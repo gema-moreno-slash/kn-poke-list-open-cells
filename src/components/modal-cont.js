@@ -17,7 +17,7 @@ export class ModalCont extends LitElement {
   }
 
   handleConnections() {
-    this.elementController.subscribe('ch-newpoke', this.handleNewPokeModal.bind(this));
+    this.elementController.subscribe('ch_newpoke', this.handleNewPokeModal.bind(this));
   }
 
   handleNewPokeModal(command) {

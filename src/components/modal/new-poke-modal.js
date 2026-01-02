@@ -20,6 +20,8 @@ class NewPokeModal extends LitElement {
 
             .actions {
                 display: flex;
+                align-items: center;
+                gap: 1rem;
             }
 
             .actions p {
@@ -63,6 +65,14 @@ class NewPokeModal extends LitElement {
                         <div class="actions">
                             <p>${this.message}</p>
                             <button 
+                                type="button" 
+                                ?disabled=${this.disabled}
+                                @click=${this.handleClose}
+                                class="button"
+                            >
+                                Cancelar
+                            </button>
+                            <button 
                                 type="submit" 
                                 ?disabled=${this.disabledBtn}
                                 class=${classMap({
@@ -94,6 +104,7 @@ class NewPokeModal extends LitElement {
     submitForm(e) {
         e.preventDefault();
         this.disabled = true;
+
         if(this.error.success)
             this.createPokemon(this.valueForm);
         else
@@ -108,7 +119,7 @@ class NewPokeModal extends LitElement {
     }
 
     handleClose() {
-        this.elementController.publish('ch-newpoke', 'close');
+        this.elementController.publish('ch_newpoke', 'close');
     }
 }
 
