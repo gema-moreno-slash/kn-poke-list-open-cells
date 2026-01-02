@@ -5,6 +5,7 @@ import { map } from 'lit/directives/map.js';
 import bulma from 'bulma/css/bulma.css?inline';
 import '../components/loading-warn.js';
 import '../components/main/main-subhead.js';
+import '../components/poke-table.js';
 
 const LIMIT = 5;
 
@@ -117,47 +118,14 @@ class ListPage extends LitElement {
 
     renderTable() {
         return html`
-            <div>
-                <div>
-                    <table class="table is-striped">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Pic</th>
-                                <th>Name</th>
-                                <th>Detail</th>
-                                <th>Fav</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${map(this.pokeList, poke => html`
-                                    <tr>
-                                        <td>${poke.id}</td>
-                                        <td><img class="pic" src=${poke.pic} /></td>
-                                        <td class="is-capitalized">${poke.name}</td>
-                                        <td>
-                                            <button 
-                                                class="button"
-                                                @click="${() => this.pageController.navigate('detail', {name: poke.name})}"
-                                            >
-                                                Detail
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button @click="${() => this.isFav(poke.name) ? this.excludeToFav(poke.name) : this.includeToFav(poke.name)}">
-                                                ${this.isFav(poke.name) ? '❤️' : '🖤'}
-                                            </button>
-                                        </td>
-                                    </tr>
-                                `)}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="paginator">
-                    <button class="button is-primary is-medium" @click=${this.prev} ?disabled=${this.page === 0}>Prev</button>
-                    <button class="button is-primary is-medium" @click=${this.next} ?disabled=${this.page === this.pageMax}>Next</button>
-                </div>
-            </div>
+            <poke-table 
+                .pokeList=${[...this.pokeList]}
+                .favs=${this.favs}
+                page=${this.page}
+                pageMax=${this.pageMax}
+                @clickFavs=${(opt) => opt.detail === 'inc' ? this.includeToFav() : this.excludeToFav}
+                @clickPage=${(opt) => opt.detail === 'next' ? this.next() : this.prev()}
+            ></poke-table>
         `;
     }
 
@@ -188,7 +156,7 @@ class ListPage extends LitElement {
     prev() {
         this.page--;
         const event = new CustomEvent('changePage', {
-            detail: { page: this.page }
+            detail: { page: this.page }, composed: false, bubbles: false
         });
         this.dispatchEvent(event);
     }
@@ -196,7 +164,7 @@ class ListPage extends LitElement {
     next() {
         this.page++;
         const event = new CustomEvent('changePage', {
-            detail: { page: this.page }
+            detail: { page: this.page }, composed: false, bubbles: false
         });
         this.dispatchEvent(event);
     }
