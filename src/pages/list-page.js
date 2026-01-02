@@ -94,20 +94,18 @@ class ListPage extends LitElement {
     }
 
     getPokemonPage() {
-        this.isNew ? this.getNewPokemonPage(...arguments) : this.getListPokemonPage(...arguments);
+        this.isNew ? this.getNewPokemonPage() : this.getListPokemonPage();
     }
 
-    getListPokemonPage(e) {
-        const {detail} = e;
+    getListPokemonPage() {
         this.loading = true;
-        getAllPokemon(detail.page * LIMIT, LIMIT)
+        getAllPokemon(this.page * LIMIT, LIMIT)
             .then(result => {
-                this.pageMax = result.data.count / LIMIT;
-                this.setPageInPath(detail.page, 'list');
+                this.pageMax = Math.floor(result.data.count / LIMIT);
+                this.setPageInPath(this.page, 'list');
                 return Promise.all(result.data.results.map(poke => getPokemon(poke.name)))
             })
             .then(list => {
-                console.log(list);
                 this.pokeList = list.map(e => ({
                     id: e.id,
                     pic: e.sprites?.front_default ?? picDefault,
@@ -121,13 +119,12 @@ class ListPage extends LitElement {
             .finally(() => this.loading = false)
     }
 
-    getNewPokemonPage(e) {
-        const {detail} = e;
+    getNewPokemonPage() {
         this.loading = true;
-        getAllNewPokemon(detail.page * LIMIT, LIMIT)
+        getAllNewPokemon(this.page * LIMIT, LIMIT)
             .then(result => {
-                this.pageMax = result.data.count / LIMIT;
-                this.setPageInPath(detail.page, 'new');
+                this.pageMax = Math.floor(result.data.count / LIMIT);
+                this.setPageInPath(this.page, 'new');
                 this.pokeList = result.data.results.map(e => ({
                     id: e._id,
                     pic: e.sprites?.front_default ?? picDefault,
@@ -189,9 +186,7 @@ class ListPage extends LitElement {
     filterList(e) {
         this.page = 0;
         this.isNew = e.detail === 'new' ? true : false;
-        const event = new CustomEvent('changePage', {
-            detail: { page: this.page }, composed: false, bubbles: false
-        });
+        const event = new CustomEvent('changePage', {composed: false, bubbles: false});
         this.dispatchEvent(event);
     }
 
@@ -209,17 +204,13 @@ class ListPage extends LitElement {
 
     prev() {
         this.page--;
-        const event = new CustomEvent('changePage', {
-            detail: { page: this.page }, composed: false, bubbles: false
-        });
+        const event = new CustomEvent('changePage', {composed: false, bubbles: false});
         this.dispatchEvent(event);
     }
 
     next() {
         this.page++;
-        const event = new CustomEvent('changePage', {
-            detail: { page: this.page }, composed: false, bubbles: false
-        });
+        const event = new CustomEvent('changePage', { composed: false, bubbles: false});
         this.dispatchEvent(event);
     }
 }
