@@ -99,7 +99,7 @@ class ListPage extends LitElement {
             .then(list => {
                 console.log(list);
                 this.pokeList = list.map(e => ({
-                    id: e._id,
+                    id: e.id,
                     pic: e.sprites?.front_default ?? picDefault,
                     name: e.name
                 }));
@@ -119,7 +119,7 @@ class ListPage extends LitElement {
                 this.pageMax = result.data.count / LIMIT;
                 this.setPageInPath(detail.page);
                 this.pokeList = result.data.results.map(e => ({
-                    id: e.id,
+                    id: e._id,
                     pic: e.sprites?.front_default ?? picDefault,
                     name: e.name
                 }));
@@ -147,10 +147,10 @@ class ListPage extends LitElement {
         return html`
             <poke-table 
                 .pokeList=${[...this.pokeList]}
-                .favs=${this.favs}
+                .favs=${!this.isNew ? this.favs : null}
                 page=${this.page}
                 pageMax=${this.pageMax}
-                @clickFavs=${(opt) => opt.detail === 'inc' ? this.includeToFav() : this.excludeToFav}
+                @clickFavs=${({detail}) => detail.command === 'inc' ? this.includeToFav(detail.name) : this.excludeToFav(detail.name)}
                 @clickPage=${(opt) => opt.detail === 'next' ? this.next() : this.prev()}
             ></poke-table>
         `;

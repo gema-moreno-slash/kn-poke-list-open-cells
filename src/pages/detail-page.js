@@ -1,12 +1,12 @@
 import { LitElement, html, css, nothing, unsafeCSS } from "lit";
 import { Task } from '@lit/task';
 import { PageController } from '@open-cells/page-controller';
-import { getPokemon } from '../../service/poke-service';
+import { getPokemon } from '../service/poke-service';
 import { map } from 'lit/directives/map.js';
 import bulma from 'bulma/css/bulma.css?inline';
-import '../../components/poke-desc';
-import '../../components/loading-warn';
-import '../../components/main/main-subhead.js';
+import '../components/poke-desc';
+import '../components/loading-warn';
+import '../components/main/main-subhead.js';
 
 class DetailPage extends LitElement {
 

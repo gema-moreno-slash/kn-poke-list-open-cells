@@ -1,4 +1,5 @@
 import { LitElement, html, css, nothing, unsafeCSS } from "lit";
+import { ElementController } from '@open-cells/element-controller';
 import { getAllPokemon, getPokemon } from '../service/poke-service.js';
 import { map } from 'lit/directives/map.js';
 import bulma from 'bulma/css/bulma.css?inline';
@@ -8,6 +9,8 @@ import '../components/main/main-subhead.js';
 const LIMIT = 5;
 
 class PokeTable extends LitElement {
+
+    elementController = new ElementController(this);
 
     static styles = [
         unsafeCSS(bulma),
@@ -86,7 +89,7 @@ class PokeTable extends LitElement {
                             <td>
                                 <button 
                                     class="button"
-                                    @click="${() => this.pageController.navigate('detail', { name: poke.name })}"
+                                    @click="${() => this.elementController.navigate('detail', { name: poke.name })}"
                                 >
                                     Detail
                                 </button>
@@ -118,14 +121,14 @@ class PokeTable extends LitElement {
 
     includeToFav(name) {
         const event = new CustomEvent('clickFavs', {
-            detail: 'inc', composed: true, bubbles: false
+            detail: {command: 'inc', name}, composed: true, bubbles: false
         });
         this.dispatchEvent(event);
     }
 
     excludeToFav(name) {
         const event = new CustomEvent('clickFavs', {
-            detail: 'exc', composed: true, bubbles: false
+            detail: {command: 'exc', name}, composed: true, bubbles: false
         });
         this.dispatchEvent(event);
     }
