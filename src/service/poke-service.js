@@ -7,6 +7,10 @@ function getAllPokemon(skip = 0, limit = LIMIT) {
     return axios.get(`${API_URL}pokemon?limit=${limit}&offset=${skip}`);
 }
 
+function getAllNewPokemon(skip = 0, limit = LIMIT) {
+    return axios.get(`http://localhost:3010/pokemon?limit=${limit}&skip=${skip}`);
+}
+
 async function getPokemon(name) {
     const response = await fetch(`${API_URL}pokemon/${name}`);
 
@@ -22,6 +26,7 @@ function createPokemon(poke) {
 
 export {
     getAllPokemon,
+    getAllNewPokemon,
     getPokemon,
     createPokemon
 }

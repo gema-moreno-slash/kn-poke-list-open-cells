@@ -1,11 +1,13 @@
 import { LitElement, html, css, nothing, unsafeCSS } from "lit";
 import { PageController } from '@open-cells/page-controller';
-import { getAllPokemon, getPokemon } from '../service/poke-service.js';
+import { getAllPokemon, getAllNewPokemon, getPokemon } from '../service/poke-service.js';
 import { map } from 'lit/directives/map.js';
 import bulma from 'bulma/css/bulma.css?inline';
+import picDefault from '../../images/pokeball.png';
 import '../components/loading-warn.js';
 import '../components/main/main-subhead.js';
 import '../components/poke-table.js';
+import '../components/poke-filter.js'
 
 const LIMIT = 5;
 
@@ -41,11 +43,12 @@ class ListPage extends LitElement {
         pokeList: {state: true},
         loading: {state: true},
         error: {state: false},
-        favs: {state: true}
+        favs: {state: true},
     }
 
     page = 0;
     pageMax = 0;
+    isNew = false;
 
     constructor() {
         super();
@@ -80,7 +83,11 @@ class ListPage extends LitElement {
         super.disconnectedCallback();
     }
 
-    getPokemonPage(e) {
+    getPokemonPage() {
+        this.isNew ? this.getNewPokemonPage(...arguments) : this.getListPokemonPage(...arguments);
+    }
+
+    getListPokemonPage(e) {
         const {detail} = e;
         this.loading = true;
         getAllPokemon(detail.page * LIMIT, LIMIT)
@@ -92,8 +99,28 @@ class ListPage extends LitElement {
             .then(list => {
                 console.log(list);
                 this.pokeList = list.map(e => ({
+                    id: e._id,
+                    pic: e.sprites?.front_default ?? picDefault,
+                    name: e.name
+                }));
+            })
+            .catch(err => {
+                this.error = true;
+                console.log(err);
+            })
+            .finally(() => this.loading = false)
+    }
+
+    getNewPokemonPage(e) {
+        const {detail} = e;
+        this.loading = true;
+        getAllNewPokemon(detail.page * LIMIT, LIMIT)
+            .then(result => {
+                this.pageMax = result.data.count / LIMIT;
+                this.setPageInPath(detail.page);
+                this.pokeList = result.data.results.map(e => ({
                     id: e.id,
-                    pic: e.sprites.front_default,
+                    pic: e.sprites?.front_default ?? picDefault,
                     name: e.name
                 }));
             })
@@ -135,10 +162,20 @@ class ListPage extends LitElement {
 
         return html`
             <main-subhead title="List"></main-subhead>
+            <poke-filter .isNew=${this.isNew} @selectFilter=${this.filterList}></poke-filter>
             ${this.loading ? loadingTpl : nothing}
             ${!this.loading && this.pokeList ? this.renderTable() : nothing}
             ${!this.loading && this.error ? errorTpl : nothing}
         `;
+    }
+
+    filterList(e) {
+        this.page = 0;
+        this.isNew = e.detail === 'new' ? true : false;
+        const event = new CustomEvent('changePage', {
+            detail: { page: this.page }, composed: false, bubbles: false
+        });
+        this.dispatchEvent(event);
     }
 
     isFav(name) {

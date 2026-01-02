@@ -12,6 +12,11 @@ class PokeTable extends LitElement {
     static styles = [
         unsafeCSS(bulma),
         css`
+            .tableCont {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+            }
             .pic {
                 height: 96px;
                 width: 96px;
@@ -47,19 +52,6 @@ class PokeTable extends LitElement {
         this.pageMax = 0;
     }
 
-    /*
-    willUpdate(changedProperties) {
-        if (changedProperties.has('initial') && this.initial) {
-            this.poke = {
-                name: this.initial.name ?? '',
-                height: this.initial.height ?? 0,
-                weight: this.initial.weight ?? 0,
-                types: this.initial.types ?? []
-            }
-        }
-    }
-    */
-
     renderFavsCol(poke) {
         return html`
             <td>
@@ -71,6 +63,8 @@ class PokeTable extends LitElement {
     }
 
     render() {
+        console.log('pageMax', this.pageMax);
+        console.log('page', this.page);
         const header = html`
             <thead>
                 <tr>
@@ -103,7 +97,7 @@ class PokeTable extends LitElement {
             </tbody>
         `;
         return html`
-            <div>
+            <div class="tableCont">
                 <div>
                     <table class="table is-striped">
                         ${header}
