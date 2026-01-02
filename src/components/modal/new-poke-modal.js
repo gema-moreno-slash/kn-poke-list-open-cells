@@ -113,7 +113,10 @@ class NewPokeModal extends LitElement {
 
     createPokemon(poke) {
         createPokemon(poke)
-            .then(res => this.message = 'Pokémon created successfully!')
+            .then(res => {
+                this.message = 'Pokémon created successfully!';
+                this.elementController.publish('ch_newpoke', 'created');
+            })
             .catch(err => this.message = err.message)
             .finally(() => this.disabled = false)
     }

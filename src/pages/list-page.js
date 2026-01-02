@@ -56,23 +56,32 @@ class ListPage extends LitElement {
         this.loading = true;
         this.error = false;
         this.favs = [];
+        this.page = this.getPageFromPath();
+        this.isNew = this.getFilterFromPath() === 'new' ? true : false;
         this.handleConnections();
     }
 
     handleConnections() {
+        this.addEventListener('changePage', this.getPokemonPage);
         this.pageController.subscribe('ch_favs_inc', (poke) => {
             this.favs = [...this.favs, poke];
         });
         this.pageController.subscribe('ch_favs_ex', (poke) => {
             this.favs = this.favs.filter(p => p !== poke);
         });
+        this.pageController.subscribe('ch_newpoke', (command) => {
+            if(command === 'created' && this.isNew) {
+                this.page = 0;
+                const event = new CustomEvent('changePage', {
+                    detail: { page: this.page }
+                });
+                this.dispatchEvent(event);
+            }
+        });
     }
 
     connectedCallback() {
         super.connectedCallback();
-        this.page = this.getPageFromPath();
-        this.isNew = this.getFilterFromPath() === 'new' ? true : false;
-        this.addEventListener('changePage', this.getPokemonPage);
         const event = new CustomEvent('changePage', {
             detail: { page: this.page }
         });
