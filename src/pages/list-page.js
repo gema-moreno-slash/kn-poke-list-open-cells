@@ -71,6 +71,7 @@ class ListPage extends LitElement {
     connectedCallback() {
         super.connectedCallback();
         this.page = this.getPageFromPath();
+        this.isNew = this.getFilterFromPath() === 'new' ? true : false;
         this.addEventListener('changePage', this.getPokemonPage);
         const event = new CustomEvent('changePage', {
             detail: { page: this.page }
@@ -93,7 +94,7 @@ class ListPage extends LitElement {
         getAllPokemon(detail.page * LIMIT, LIMIT)
             .then(result => {
                 this.pageMax = result.data.count / LIMIT;
-                this.setPageInPath(detail.page);
+                this.setPageInPath(detail.page, 'list');
                 return Promise.all(result.data.results.map(poke => getPokemon(poke.name)))
             })
             .then(list => {
@@ -117,7 +118,7 @@ class ListPage extends LitElement {
         getAllNewPokemon(detail.page * LIMIT, LIMIT)
             .then(result => {
                 this.pageMax = result.data.count / LIMIT;
-                this.setPageInPath(detail.page);
+                this.setPageInPath(detail.page, 'new');
                 this.pokeList = result.data.results.map(e => ({
                     id: e._id,
                     pic: e.sprites?.front_default ?? picDefault,
@@ -131,15 +132,22 @@ class ListPage extends LitElement {
             .finally(() => this.loading = false)
     }
 
-    setPageInPath(page) {
+    setPageInPath(page, filter) {
         const url = new URL(window.location.href);
         url.searchParams.set('page', page);
+        url.searchParams.set('filter', filter);
         window.history.pushState({}, '', url);
     }
 
     getPageFromPath() {
         const url = new URL(window.location.href);
         const page = url.searchParams.get('page') !== null ? url.searchParams.get('page') : 0;
+        return page;
+    }
+
+    getFilterFromPath() {
+        const url = new URL(window.location.href);
+        const page = url.searchParams.get('filter') !== null ? url.searchParams.get('list') : 0;
         return page;
     }
 
