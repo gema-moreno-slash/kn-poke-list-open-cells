@@ -1,12 +1,7 @@
 import { LitElement, html, css, nothing, unsafeCSS } from "lit";
 import { map } from 'lit/directives/map.js';
 import bulma from 'bulma/css/bulma.css?inline';
-
-const pokeTypes = [
-    'normal', 'fire', 'water', 'grass', 'electric', 'ice', 'fighting',
-    'poison', 'ground', 'flying', 'psychic', 'bug', 'rock', 'ghost',
-    'dark', 'dragon', 'steel', 'fairy'
-];
+import { pokeTypes, pokeValSchema } from "../models/pokemon";
 
 class PokeForm extends LitElement {
 
@@ -15,23 +10,28 @@ class PokeForm extends LitElement {
     }
 
     static properties = {
-        poke: {type: Object}
+        initial: {type: Object},
+        poke: {state: true}
     };
 
     constructor() {
         super();
-        this.name = '';
-        this.height = '';
-        this.weight = '';
-        this.types = [];
+        this.poke = {
+            name: '',
+            height: '',
+            weight: '',
+            types: []
+        }
     }
 
     willUpdate(changedProperties) {
-        if (changedProperties.has('poke') && this.poke) {
-            this.name = this.poke.name ?? '';
-            this.height = this.poke.height ?? '';
-            this.weight = this.poke.weight ?? '';
-            this.types = this.poke.types ?? [];
+        if (changedProperties.has('initial') && this.initial) {
+            this.poke = {
+                name: this.initial.name ?? '',
+                height: this.initial.height ?? 0,
+                weight: this.initial.weight ?? 0,
+                types: this.initial.types ?? []
+            }
         }
     }
 
@@ -68,7 +68,7 @@ class PokeForm extends LitElement {
                     id="name" 
                     name="name" 
                     type="text"
-                    .value=${this.name}
+                    .value=${this.poke.name}
                     @input=${e => this.changeInput('name', e.target.value)}
                 />
             </div>
@@ -79,8 +79,8 @@ class PokeForm extends LitElement {
                     id="height" 
                     name="height" 
                     type="text"
-                    .value=${this.height} 
-                    @input=${(e)=> this.changeInput('height', e.target.value)}
+                    .value=${this.poke.height} 
+                    @input=${(e)=> this.changeInput('height', Number(e.target.value))}
                 />
             </div>
             <div class="field">
@@ -90,8 +90,8 @@ class PokeForm extends LitElement {
                     id="weight" 
                     name="weight" 
                     type="text"
-                    .value=${this.weight} 
-                    @input=${(e)=> this.changeInput('weight', e.target.value)}
+                    .value=${this.poke.weight} 
+                    @input=${(e)=> this.changeInput('weight', Number(e.target.value))}
                 />
             </div>
             <div class="field">
@@ -110,7 +110,7 @@ class PokeForm extends LitElement {
                         ${map(pokeTypes, type => html`
                             <option 
                                 value="${type}" 
-                                ?selected=${this.types.includes(type)}
+                                ?selected=${this.poke.types.includes(type)}
                             >
                                 ${type}
                             </option>`
@@ -122,20 +122,28 @@ class PokeForm extends LitElement {
     }
 
     changeInput(name, val) {
-        this[name] = val;
+        this.poke[name] = val;
         this.showFormInfo();
+        this.checkErrors();
     }
 
     showFormInfo() {
-        const detail = {
-            name: this.name,
-            height: this.height,
-            weight: this.weight,
-            types: this.types
-        }
         const event = new CustomEvent(
             'update', 
-            { detail, composed: true, bubbles: false }
+            { 
+                detail: JSON.parse(JSON.stringify(this.poke)), 
+                composed: true, 
+                bubbles: false 
+            }
+        );
+        this.dispatchEvent(event);
+    }
+
+    checkErrors() {
+        const error = pokeValSchema.safeParse(this.poke);
+        const event = new CustomEvent(
+            'error', 
+            { detail: error, composed: true, bubbles: false }
         );
         this.dispatchEvent(event);
     }

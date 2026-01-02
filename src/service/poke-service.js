@@ -17,9 +17,8 @@ async function getPokemon(name) {
 }
 
 function createPokemon(poke) {
-    return axios.post(`${API_URL}pokemon`, poke);
+    return axios.post(`http://localhost:3010/pokemon`, poke);
 }
-
 
 export {
     getAllPokemon,

@@ -6,7 +6,7 @@ import { map } from 'lit/directives/map.js';
 import bulma from 'bulma/css/bulma.css?inline';
 import '../../components/poke-desc';
 import '../../components/loading-warn';
-import '../../components/main-subhead.js';
+import '../../components/main/main-subhead.js';
 
 class DetailPage extends LitElement {
 

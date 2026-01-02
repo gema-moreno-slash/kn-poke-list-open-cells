@@ -1,10 +1,10 @@
 import { LitElement, html, css, nothing, unsafeCSS } from "lit";
 import { PageController } from '@open-cells/page-controller';
-import { getAllPokemon, getPokemon } from '../../service/poke-service.js';
+import { getAllPokemon, getPokemon } from '../service/poke-service.js';
 import { map } from 'lit/directives/map.js';
 import bulma from 'bulma/css/bulma.css?inline';
-import '../../components/loading-warn.js';
-import '../../components/main-subhead.js';
+import '../components/loading-warn.js';
+import '../components/main/main-subhead.js';
 
 const LIMIT = 5;
 

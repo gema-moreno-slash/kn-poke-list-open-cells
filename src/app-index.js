@@ -2,11 +2,11 @@ import { startApp } from '@open-cells/core';
 import { LitElement, html, css, unsafeCSS, nothing } from 'lit';
 import { ElementController } from '@open-cells/element-controller';
 import { customElement, state } from 'lit/decorators.js';
-import { routes } from '../router/routes.js';
+import { routes } from './router/routes.js';
 import bulma from 'bulma/css/bulma.css?inline';
-import './main-header.js';
-import './main-footer.js';
-import './modal-cont.js';
+import './components/main/main-header.js';
+import './components/main/main-footer.js';
+import './components/modal-cont.js';
 
 startApp({
   routes,

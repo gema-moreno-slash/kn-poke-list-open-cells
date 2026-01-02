@@ -30,17 +30,19 @@ class NewPokeModal extends LitElement {
 
     static properties = {
         message: {state: true},
-        disabled: {state: true}
+        disabled: {state: true},
+        disabledBtn: {state: true},
     }
 
     constructor() {
         super();
         this.message = '';
         this.disabled = false;
+        this.disabledBtn = true;
     }
 
     render() {
-        const poke = {
+        const test = {
             name: 'periko'
         }
         return html`
@@ -51,13 +53,18 @@ class NewPokeModal extends LitElement {
                 <form @submit=${this.submitForm}>
                     <fieldset ?disabled=${this.disabled}>
                         <div>
-                            <poke-form @update=${this.updateForm}></poke-form>
+                            <poke-form 
+                                .initial=${test}
+                                @update=${this.updateForm}
+                                @error=${this.errorForm}
+                            >
+                            </poke-form>
                         </div>
                         <div class="actions">
                             <p>${this.message}</p>
                             <button 
                                 type="submit" 
-                                class="button is-primary"
+                                ?disabled=${this.disabledBtn}
                                 class=${classMap({
                                     button: true,
                                     ["is-primary"]: true,
@@ -67,7 +74,7 @@ class NewPokeModal extends LitElement {
                                 Crear
                             </button>
                         </div>
-                    <fieldset id="formFieldset">
+                    </fieldset>
                 </form>
             </base-modal>
         `;
@@ -75,31 +82,29 @@ class NewPokeModal extends LitElement {
 
     updateForm(e) {
         console.log('updateForm', e.detail)
+        this.valueForm = e.detail;
+    }
+
+    errorForm(e) {
+        console.log('errorForm', e.detail)
+        this.error = e.detail;
+        this.disabledBtn = !this.error.success;
     }
 
     submitForm(e) {
         e.preventDefault();
         this.disabled = true;
-
-        const form = this.renderRoot.querySelector('form');
-        const fd = new FormData(form);
-        const newPoke = {
-            name: fd.get('name'),
-            height: fd.get('height'),
-            weight: fd.get('weight'),
-            types: fd.get('types'),
-        }
-        
-        this.createPokemon()
+        if(this.error.success)
+            this.createPokemon(this.valueForm);
+        else
+            this.disabled = false;
     }
 
     createPokemon(poke) {
-        setTimeout(() => {
-            createPokemon(poke)
-                .then(res => this.message = JSON.stringify(res))
-                .catch(err => this.message = err.message)
-                .finally(() => this.disabled = false)
-        }, 2000)
+        createPokemon(poke)
+            .then(res => this.message = 'Pokémon created successfully!')
+            .catch(err => this.message = err.message)
+            .finally(() => this.disabled = false)
     }
 
     handleClose() {
