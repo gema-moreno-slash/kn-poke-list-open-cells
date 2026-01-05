@@ -3,6 +3,11 @@ import { LitElement, html, css, unsafeCSS, nothing } from 'lit';
 import { ElementController } from '@open-cells/element-controller';
 import { customElement, state } from 'lit/decorators.js';
 import { routes } from './router/routes.js';
+import {
+  detectSystemMode,
+  getMode,
+  changeMode
+} from './theme.js';
 import bulma from 'bulma/css/bulma.css?inline';
 import './components/main/main-header.js';
 import './components/main/main-footer.js';
@@ -45,10 +50,20 @@ export class AppIndex extends LitElement {
     `
   ]
 
+  static properties = {
+    mode: { state:true }
+  }
+
+  constructor() {
+    super();
+    detectSystemMode();
+    this.mode = getMode();
+  }
+
   renderMainLayout(content) {
     return html`
       <div class="mainCont">
-        <main-header></main-header>
+        <main-header .mode=${this.mode} @change-mode=${this.changeModee}></main-header>
         ${content}
         <main-footer></main-footer>
       </div>
@@ -62,6 +77,11 @@ export class AppIndex extends LitElement {
         <slot></slot>
       </main>
     `);
+  }
+
+  changeModee() {
+    changeMode();
+    this.mode = getMode();
   }
 }
 

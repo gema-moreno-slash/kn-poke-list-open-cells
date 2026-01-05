@@ -29,12 +29,14 @@ class MainHeader extends LitElement {
     ]
 
     static properties = {
-        favs: {state: true}
+        favs: { state: true },
+        mode: { type: String }
     }
 
     constructor() {
         super();
         this.favs = [];
+        this.mode = 'dark';
         this.handleConnections();
     }
 
@@ -48,21 +50,28 @@ class MainHeader extends LitElement {
     }
 
     render() {
+        const renderActions = html`
+            <button class="button is-primary" @click=${this.newPoke}>New</button>
+            <div class="control">
+                <div class="select">
+                    <select @change=${this.selectFav}>
+                        <option selected value="default">Favs</option>
+                        ${map(this.favs, (f) => html`<option value="${f}">${f}</option>`)}
+                    </select>
+                </div>
+            </div>
+            <button class="button" @click=${this.clickMode}>
+                ${this.mode === 'dark' ? 'Dark 🌛' : 'Light 🌞'}
+            </button>
+        `;
+
         return html`
             <header class="mainCont">
                 <div class="title">
                     <h1 class="title is-1">KN - Pokemon List</h1>
                 </div>
                 <div class="actions">
-                    <button class="button is-primary" @click=${this.newPoke}>New</button>
-                    <div class="control">
-                        <div class="select">
-                            <select @change=${this.selectFav}>
-                                <option selected value="default">Favs</option>
-                                ${map(this.favs, (f) => html`<option value="${f}">${f}</option>`)}
-                            </select>
-                        </div>
-                    </div>
+                    ${renderActions}
                 </div>
             </header>
         `;
@@ -75,6 +84,11 @@ class MainHeader extends LitElement {
     selectFav(event) {
         const name = event.target.value;
         name !== 'default' && this.elementController.navigate('detail', {name})
+    }
+
+    clickMode() {
+        const e = new CustomEvent('change-mode', { bubbles: false, composed: true });
+        this.dispatchEvent(e);
     }
 }
 
