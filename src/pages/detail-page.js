@@ -15,7 +15,7 @@ class DetailPage extends LitElement {
     pageController = new PageController(this);
 
     static properties = {
-        poke: { state: true }
+        pokeTask: { state: true }
     }
 
     static styles = [
@@ -48,11 +48,7 @@ class DetailPage extends LitElement {
     }
 
     onPageEnter() {
-        console.log('page enter');
-        const nameRoute = this.pageController.getCurrentRoute().name;
-        console.log('nameRoute', nameRoute)
-/*
-        if (nameRoute === 'detail-new') {
+        if (this.pageController.getCurrentRoute().name === 'detail-new') {
             const id = this.pageController.getCurrentRoute().params.id;
             this.pokeTask = new Task(this, {
                 task: async ([id]) => {
@@ -69,7 +65,6 @@ class DetailPage extends LitElement {
                 args: () => [name]
             });
         }
-            */
     }
 
     renderDetail(poke) {
@@ -108,17 +103,14 @@ class DetailPage extends LitElement {
     }
 
     render() {
-        return "Detail Page - under construction";
-        /*
         return html`
             <main-subhead title="Detail" back="true"></main-subhead>
-            ${this.pokeTask.render({
+            ${this.pokeTask?.render({
                 pending: () => html`<loading-warn></loading-warn>`,
                 complete: (poke) => html`${this.renderDetail(poke)}`,
                 error: (e) => html`<p>Hubo un error</p>`
             })}
         `;
-        */
     }
 
 }
