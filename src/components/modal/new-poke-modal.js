@@ -1,7 +1,7 @@
 import { LitElement, html, css, nothing, unsafeCSS } from "lit";
 import { ElementController } from '@open-cells/element-controller';
 import { classMap } from "lit/directives/class-map.js";
-import { createPokemon } from '../../service/poke-service';
+import { createNewPokemon } from '../../service/poke-service';
 import bulma from 'bulma/css/bulma.css?inline';
 import "./base-modal";
 import "../poke-form";
@@ -104,13 +104,13 @@ class NewPokeModal extends LitElement {
         this.disabled = true;
 
         if(this.error.success)
-            this.createPokemon(this.valueForm);
+            this.createNewPokemon(this.valueForm);
         else
             this.disabled = false;
     }
 
-    createPokemon(poke) {
-        createPokemon(poke)
+    createNewPokemon(poke) {
+        createNewPokemon(poke)
             .then(res => {
                 this.message = 'Pokémon created successfully!';
                 this.elementController.publish('ch_newpoke', 'created');

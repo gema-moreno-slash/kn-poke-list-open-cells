@@ -1,6 +1,6 @@
 import { LitElement, html, css, nothing, unsafeCSS } from "lit";
 import { PageController } from '@open-cells/page-controller';
-import { getAllPokemon, getListNewPokemon, getPokemon } from '../service/poke-service.js';
+import { getListPokemon, getListNewPokemon, getPokemon } from '../service/poke-service.js';
 import { map } from 'lit/directives/map.js';
 import bulma from 'bulma/css/bulma.css?inline';
 import picDefault from '../../images/pokeball.png';
@@ -99,7 +99,7 @@ class ListPage extends LitElement {
 
     getListPokemonPage() {
         this.loading = true;
-        getAllPokemon(this.page * LIMIT, LIMIT)
+        getListPokemon(this.page * LIMIT, LIMIT)
             .then(result => {
                 this.pageMax = Math.floor(result.data.count / LIMIT);
                 this.setPageInPath(this.page, 'list');

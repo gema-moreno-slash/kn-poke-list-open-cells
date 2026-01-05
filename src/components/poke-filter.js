@@ -1,5 +1,5 @@
 import { LitElement, html, css, nothing, unsafeCSS } from "lit";
-import { getAllPokemon, getPokemon } from '../service/poke-service.js';
+import { getListPokemon, getPokemon } from '../service/poke-service.js';
 import { map } from 'lit/directives/map.js';
 import bulma from 'bulma/css/bulma.css?inline';
 import '../components/loading-warn.js';
