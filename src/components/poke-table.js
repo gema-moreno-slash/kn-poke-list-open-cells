@@ -58,15 +58,11 @@ class PokeTable extends LitElement {
     renderFavsCol(poke) {
         return html`
             <td>
-                <button @click="${() => this.isFav(poke.name) ? this.excludeToFav(poke.name) : this.includeToFav(poke.name)}">
-                    ${this.isFav(poke.name) ? '❤️' : '🖤'}
+                <button @click="${() => this.isFav(poke.name) ? this.excToFav(poke.name) : this.incToFav(poke.name)}">
+                    ${this.favs.find(p => p === poke.name) ? '❤️' : '🖤'}
                 </button>
             </td>
         `;
-    }
-
-    isFav(name) {
-        return this.favs.find(p => p === name);
     }
 
     render() {
@@ -124,14 +120,14 @@ class PokeTable extends LitElement {
         this.dispatchEvent(event);
     }
 
-    includeToFav(name) {
+    incToFav(name) {
         const event = new CustomEvent('clickFavs', {
             detail: {command: 'inc', name}, composed: true, bubbles: false
         });
         this.dispatchEvent(event);
     }
 
-    excludeToFav(name) {
+    excToFav(name) {
         const event = new CustomEvent('clickFavs', {
             detail: {command: 'exc', name}, composed: true, bubbles: false
         });

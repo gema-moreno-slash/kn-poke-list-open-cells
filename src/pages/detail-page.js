@@ -8,7 +8,6 @@ import bulma from 'bulma/css/bulma.css?inline';
 import '../components/poke-desc';
 import '../components/loading-warn';
 import '../components/main/main-subhead.js';
-import { is } from "zod/v4/locales";
 
 class DetailPage extends LitElement {
 
