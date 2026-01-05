@@ -56,10 +56,11 @@ class PokeTable extends LitElement {
     }
 
     renderFavsCol(poke) {
+        const isFav = this.favs.find(p => p === poke.name);
         return html`
             <td>
-                <button @click="${() => this.isFav(poke.name) ? this.excToFav(poke.name) : this.incToFav(poke.name)}">
-                    ${this.favs.find(p => p === poke.name) ? '❤️' : '🖤'}
+                <button @click="${() => isFav ? this.excToFav(poke.name) : this.incToFav(poke.name)}">
+                    ${isFav ? '❤️' : '🖤'}
                 </button>
             </td>
         `;

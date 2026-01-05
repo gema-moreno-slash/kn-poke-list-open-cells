@@ -46,23 +46,25 @@ class ListPage extends LitElement {
         favs: {state: true},
     }
 
-    page = 0;
-    pageMax = 0;
-    isNew = false;
+
+    // -- Life Cycle -- //
 
     constructor() {
         super();
+
+        // Reactive
         this.pokeList = [];
         this.loading = true;
         this.error = false;
         this.favs = [];
+
+        // Reg Props
         this.page = this.getPageFromPath();
         this.isNew = this.getFilterFromPath() === 'new' ? true : false;
         this.handleConnections();
     }
 
     handleConnections() {
-        this.addEventListener('changePage', this.getPokemonPage);
         this.pageController.subscribe('ch_favs_inc', (poke) => {
             this.favs = [...this.favs, poke];
         });
@@ -72,32 +74,47 @@ class ListPage extends LitElement {
         this.pageController.subscribe('ch_newpoke', (command) => {
             if(command === 'created' && this.isNew) {
                 this.page = 0;
-                const event = new CustomEvent('changePage', {
-                    detail: { page: this.page }
-                });
-                this.dispatchEvent(event);
+                this.isNew = true;
+                this.getPokeList();
             }
         });
     }
 
     connectedCallback() {
         super.connectedCallback();
-        const event = new CustomEvent('changePage', {
-            detail: { page: this.page }
-        });
-        this.dispatchEvent(event);
+        this.getPokeList();
     }
 
     disconnectedCallback() {
-        this.removeEventListener('changePage', this.getPokemonPage);
+        this.pageController.unsubscribe('ch_favs_inc');
+        this.pageController.unsubscribe('ch_favs_ex');
+        this.pageController.unsubscribe('ch_newpoke');
         super.disconnectedCallback();
     }
 
-    getPokemonPage() {
-        this.isNew ? this.getNewPokemonPage() : this.getListPokemonPage();
+
+    // -- Path Methods -- //
+
+    getPageFromPath() {
+        const url = new URL(window.location.href);
+        const page = url.searchParams.get('page') !== null ? url.searchParams.get('page') : 0;
+        return page;
     }
 
-    getListPokemonPage() {
+    getFilterFromPath() {
+        const url = new URL(window.location.href);
+        const filter = url.searchParams.get('filter') !== null ? url.searchParams.get('list') : 'list';
+        return filter;
+    }
+
+
+    // -- Service Methods -- //
+
+    getPokeList() {
+        this.isNew ? this.getPokeListInt() : this.getPokeListExt();
+    }
+
+    getPokeListExt() {
         this.loading = true;
         getListPokemon(this.page * LIMIT, LIMIT)
             .then(result => {
@@ -119,7 +136,7 @@ class ListPage extends LitElement {
             .finally(() => this.loading = false)
     }
 
-    getNewPokemonPage() {
+    getPokeListInt() {
         this.loading = true;
         getListNewPokemon(this.page * LIMIT, LIMIT)
             .then(result => {
@@ -145,17 +162,8 @@ class ListPage extends LitElement {
         window.history.pushState({}, '', url);
     }
 
-    getPageFromPath() {
-        const url = new URL(window.location.href);
-        const page = url.searchParams.get('page') !== null ? url.searchParams.get('page') : 0;
-        return page;
-    }
 
-    getFilterFromPath() {
-        const url = new URL(window.location.href);
-        const page = url.searchParams.get('filter') !== null ? url.searchParams.get('list') : 0;
-        return page;
-    }
+    // -- Render -- //
 
     renderTable() {
         return html`
@@ -184,6 +192,9 @@ class ListPage extends LitElement {
         `;
     }
 
+
+    // -- Handler Btns -- //
+
     clickDetail(poke) {
         this.isNew ?
             this.pageController.navigate('detail-new', { id: poke.id }) :
@@ -193,12 +204,8 @@ class ListPage extends LitElement {
     filterList(e) {
         this.page = 0;
         this.isNew = e.detail === 'new' ? true : false;
-        const event = new CustomEvent('changePage', {composed: false, bubbles: false});
+        this.getPokeList();
         this.dispatchEvent(event);
-    }
-
-    isFav(name) {
-        return this.favs.find(p => p === name);
     }
 
     includeToFav(name) {
@@ -211,14 +218,12 @@ class ListPage extends LitElement {
 
     prev() {
         this.page--;
-        const event = new CustomEvent('changePage', {composed: false, bubbles: false});
-        this.dispatchEvent(event);
+        this.getPokeList();
     }
 
     next() {
         this.page++;
-        const event = new CustomEvent('changePage', { composed: false, bubbles: false});
-        this.dispatchEvent(event);
+        this.getPokeList();
     }
 }
 
