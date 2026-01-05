@@ -7,12 +7,21 @@ function getAllPokemon(skip = 0, limit = LIMIT) {
     return axios.get(`${API_URL}pokemon?limit=${limit}&offset=${skip}`);
 }
 
-function getAllNewPokemon(skip = 0, limit = LIMIT) {
-    return axios.get(`http://localhost:3010/pokemon?limit=${limit}&skip=${skip}`);
+function getListNewPokemon(skip = 0, limit = LIMIT) {
+    return axios.get(`http://localhost:3010/pokemon/list?limit=${limit}&skip=${skip}`);
 }
 
 async function getPokemon(name) {
     const response = await fetch(`${API_URL}pokemon/${name}`);
+
+    if (!response.ok) {
+        throw new Error(`Error ${response.status}: Pokémon no encontrado`);
+    }
+    return response.json();
+}
+
+async function getNewPokemon(name) {
+    const response = await fetch(`http://localhost:3010/pokemon/${name}`);
 
     if (!response.ok) {
         throw new Error(`Error ${response.status}: Pokémon no encontrado`);
@@ -26,7 +35,8 @@ function createPokemon(poke) {
 
 export {
     getAllPokemon,
-    getAllNewPokemon,
+    getListNewPokemon,
     getPokemon,
+    getNewPokemon,
     createPokemon
 }

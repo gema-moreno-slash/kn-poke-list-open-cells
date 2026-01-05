@@ -91,12 +91,10 @@ class NewPokeModal extends LitElement {
     }
 
     updateForm(e) {
-        console.log('updateForm', e.detail)
         this.valueForm = e.detail;
     }
 
     errorForm(e) {
-        console.log('errorForm', e.detail)
         this.error = e.detail;
         this.disabledBtn = !this.error.success;
     }

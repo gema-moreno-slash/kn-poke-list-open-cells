@@ -14,5 +14,13 @@ export const routes = [
     action: async () => {
       await import('../pages/detail-page.js')
     }
+  },
+  {
+    path: '/detail/new/:id',
+    name: 'detail-new',
+    component: 'detail-page',
+    action: async () => {
+      await import('../pages/detail-page.js')
+    }
   }
 ];

@@ -65,9 +65,11 @@ class PokeTable extends LitElement {
         `;
     }
 
+    isFav(name) {
+        return this.favs.find(p => p === name);
+    }
+
     render() {
-        console.log('pageMax', this.pageMax);
-        console.log('page', this.page);
         const header = html`
             <thead>
                 <tr>
@@ -89,7 +91,7 @@ class PokeTable extends LitElement {
                             <td>
                                 <button 
                                     class="button"
-                                    @click="${() => this.elementController.navigate('detail', { name: poke.name })}"
+                                    @click="${() => this.clickDetail(poke)}"
                                 >
                                     Detail
                                 </button>
@@ -115,8 +117,11 @@ class PokeTable extends LitElement {
         `;
     }
 
-    isFav(name) {
-        return this.favs.find(p => p === name);
+    clickDetail(poke) {
+        const event = new CustomEvent('clickDetail', {
+             detail: poke, composed: true, bubbles: false
+        });
+        this.dispatchEvent(event);
     }
 
     includeToFav(name) {

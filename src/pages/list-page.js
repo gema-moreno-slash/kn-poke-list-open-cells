@@ -1,6 +1,6 @@
 import { LitElement, html, css, nothing, unsafeCSS } from "lit";
 import { PageController } from '@open-cells/page-controller';
-import { getAllPokemon, getAllNewPokemon, getPokemon } from '../service/poke-service.js';
+import { getAllPokemon, getListNewPokemon, getPokemon } from '../service/poke-service.js';
 import { map } from 'lit/directives/map.js';
 import bulma from 'bulma/css/bulma.css?inline';
 import picDefault from '../../images/pokeball.png';
@@ -121,12 +121,12 @@ class ListPage extends LitElement {
 
     getNewPokemonPage() {
         this.loading = true;
-        getAllNewPokemon(this.page * LIMIT, LIMIT)
+        getListNewPokemon(this.page * LIMIT, LIMIT)
             .then(result => {
                 this.pageMax = Math.floor(result.data.count / LIMIT);
                 this.setPageInPath(this.page, 'new');
                 this.pokeList = result.data.results.map(e => ({
-                    id: e._id,
+                    id: e.id,
                     pic: e.sprites?.front_default ?? picDefault,
                     name: e.name
                 }));
@@ -164,6 +164,7 @@ class ListPage extends LitElement {
                 .favs=${!this.isNew ? this.favs : null}
                 page=${this.page}
                 pageMax=${this.pageMax}
+                @clickDetail=${({detail}) => this.clickDetail(detail)}
                 @clickFavs=${({detail}) => detail.command === 'inc' ? this.includeToFav(detail.name) : this.excludeToFav(detail.name)}
                 @clickPage=${(opt) => opt.detail === 'next' ? this.next() : this.prev()}
             ></poke-table>
@@ -181,6 +182,12 @@ class ListPage extends LitElement {
             ${!this.loading && this.pokeList ? this.renderTable() : nothing}
             ${!this.loading && this.error ? errorTpl : nothing}
         `;
+    }
+
+    clickDetail(poke) {
+        this.isNew ?
+            this.pageController.navigate('detail-new', { id: poke.id }) :
+            this.pageController.navigate('detail', { name: poke.name })
     }
 
     filterList(e) {
