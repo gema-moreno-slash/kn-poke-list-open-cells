@@ -131,6 +131,7 @@ class ListPage extends LitElement {
             })
             .catch(err => {
                 this.error = true;
+                this.pokeList = [];
                 console.log(err);
             })
             .finally(() => this.loading = false)
@@ -150,6 +151,7 @@ class ListPage extends LitElement {
             })
             .catch(err => {
                 this.error = true;
+                this.pokeList = [];
                 console.log(err);
             })
             .finally(() => this.loading = false)
@@ -187,7 +189,7 @@ class ListPage extends LitElement {
             <main-subhead title="List"></main-subhead>
             <poke-filter .isNew=${this.isNew} @selectFilter=${this.filterList}></poke-filter>
             ${this.loading ? loadingTpl : nothing}
-            ${!this.loading && this.pokeList ? this.renderTable() : nothing}
+            ${!this.loading && this.pokeList.length !== 0 ? this.renderTable() : nothing}
             ${!this.loading && this.error ? errorTpl : nothing}
         `;
     }
