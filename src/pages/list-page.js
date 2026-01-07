@@ -205,7 +205,6 @@ class ListPage extends LitElement {
         this.page = 0;
         this.isNew = e.detail === 'new' ? true : false;
         this.getPokeList();
-        this.dispatchEvent(event);
     }
 
     includeToFav(name) {

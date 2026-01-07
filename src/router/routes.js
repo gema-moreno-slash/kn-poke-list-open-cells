@@ -16,7 +16,7 @@ export const routes = [
     }
   },
   {
-    path: '/detail/new/:id',
+    path: '/new/:id',
     name: 'detail-new',
     component: 'detail-page',
     action: async () => {
