@@ -4,7 +4,7 @@ export const routes = [
     name: 'list',
     component: 'list-page',
     action: async () => {
-      await import('../pages/list/list-page.js')
+      await import('../pages/list-page.js')
     }
   },
   {
@@ -12,25 +12,15 @@ export const routes = [
     name: 'detail',
     component: 'detail-page',
     action: async () => {
-      await import('../pages/detail/detail-page.js')
+      await import('../pages/detail-page.js')
     }
   },
-
-  // Test Pages
   {
-    path: '/test-home',
-    name: 'test-home',
-    component: 'home-page',
+    path: '/new/:id',
+    name: 'detail-new',
+    component: 'detail-page',
     action: async () => {
-      await import('../pages/home/home-page.ts');
-    },
-  },
-  {
-    path: '/test-second',
-    name: 'test-second',
-    component: 'second-page',
-    action: async () => {
-      await import('../pages/second/second-page.ts');
-    },
+      await import('../pages/detail-page.js')
+    }
   }
 ];

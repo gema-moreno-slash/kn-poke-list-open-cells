@@ -1,10 +1,17 @@
 import { startApp } from '@open-cells/core';
-import { LitElement, html, css, unsafeCSS } from 'lit';
-import { customElement } from 'lit/decorators.js';
-import { routes } from '../router/routes.js';
+import { LitElement, html, css, unsafeCSS, nothing } from 'lit';
+import { ElementController } from '@open-cells/element-controller';
+import { customElement, state } from 'lit/decorators.js';
+import { routes } from './router/routes.js';
+import {
+  detectSystemMode,
+  getMode,
+  changeMode
+} from './theme.js';
 import bulma from 'bulma/css/bulma.css?inline';
-import './main-header.js';
-import './main-footer.js'
+import './components/main/main-header.js';
+import './components/main/main-footer.js';
+import './components/modal-cont.js';
 
 startApp({
   routes,
@@ -43,13 +50,24 @@ export class AppIndex extends LitElement {
     `
   ]
 
+  static properties = {
+    mode: { state:true }
+  }
+
+  constructor() {
+    super();
+    detectSystemMode();
+    this.mode = getMode();
+  }
+
   renderMainLayout(content) {
     return html`
-      <div>
-        <main-header></main-header>
+      <div class="mainCont">
+        <main-header .mode=${this.mode} @change-mode=${this.changeModee}></main-header>
         ${content}
         <main-footer></main-footer>
       </div>
+      <modal-cont></modal-cont>
     `;
   }
 
@@ -59,6 +77,11 @@ export class AppIndex extends LitElement {
         <slot></slot>
       </main>
     `);
+  }
+
+  changeModee() {
+    changeMode();
+    this.mode = getMode();
   }
 }
 

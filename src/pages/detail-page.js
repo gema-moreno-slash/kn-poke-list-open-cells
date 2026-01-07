@@ -1,19 +1,20 @@
 import { LitElement, html, css, nothing, unsafeCSS } from "lit";
 import { Task } from '@lit/task';
 import { PageController } from '@open-cells/page-controller';
-import { getPokemon } from '../../service/poke-service';
+import { getPokemon, getNewPokemon } from '../service/poke-service';
 import { map } from 'lit/directives/map.js';
+import picDefault from '../../images/pokeball.png';
 import bulma from 'bulma/css/bulma.css?inline';
-import '../../components/poke-desc';
-import '../../components/loading-warn';
-import '../../components/main-subhead.js';
+import '../components/poke-desc';
+import '../components/loading-warn';
+import '../components/main/main-subhead.js';
 
 class DetailPage extends LitElement {
 
     pageController = new PageController(this);
 
     static properties = {
-        poke: { state: true }
+        pokeTask: { state: true }
     }
 
     static styles = [
@@ -45,20 +46,24 @@ class DetailPage extends LitElement {
         this.error = false;
     }
 
-    pokeTask = new Task(this, {
-        task: async ([name]) => {
-            return await getPokemon(name);
-        },
-        args: () => [this.poke]
-    });
-
-    connectedCallback() {
-        super.connectedCallback();
-    }
-
     onPageEnter() {
-        console.log('Entering detail page', this.pageController.getCurrentRoute().params.name);
-        this.poke = this.pageController.getCurrentRoute().params.name;
+        if (this.pageController.getCurrentRoute().name === 'detail-new') {
+            const id = this.pageController.getCurrentRoute().params.id;
+            this.pokeTask = new Task(this, {
+                task: async ([id]) => {
+                    return await getNewPokemon(id);
+                },
+                args: () => [id]
+            });
+        } else {
+            const name = this.pageController.getCurrentRoute().params.name;
+            this.pokeTask = new Task(this, {
+                task: async ([name]) => {
+                    return await getPokemon(name);
+                },
+                args: () => [name]
+            });
+        }
     }
 
     renderDetail(poke) {
@@ -72,7 +77,7 @@ class DetailPage extends LitElement {
                     <div class="media">
                         <div class="media-left">
                             <figure class="image">
-                                <img class="pic" src=${poke.sprites.front_default} />
+                                <img class="pic" src=${poke.sprites?.front_default ?? picDefault} />
                             </figure>
                         </div>
                         <div class="media-content">
@@ -99,7 +104,7 @@ class DetailPage extends LitElement {
     render() {
         return html`
             <main-subhead title="Detail" back="true"></main-subhead>
-            ${this.pokeTask.render({
+            ${this.pokeTask?.render({
                 pending: () => html`<loading-warn></loading-warn>`,
                 complete: (poke) => html`${this.renderDetail(poke)}`,
                 error: (e) => html`<p>Hubo un error</p>`
