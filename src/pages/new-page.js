@@ -9,7 +9,7 @@ import '../components/poke-desc';
 import '../components/loading-warn';
 import '../components/main/main-subhead.js';
 
-class DetailPage extends LitElement {
+class NewPage extends LitElement {
 
     pageController = new PageController(this);
 
@@ -68,7 +68,7 @@ class DetailPage extends LitElement {
     renderDetail(poke) {
         const height = html`${poke.height * 10} cm`;
         const weight = html`${poke.weight / 10} kg`;
-        const types = map(poke.types, (t) => html`<span class="tag is-capitalized">${t.type.name}</span>`)
+        const types = map(poke.types, (t) => html`<span class="tag is-capitalized">${t.type}</span>`)
 
         return html`
             <div class="card">
@@ -113,4 +113,4 @@ class DetailPage extends LitElement {
 
 }
 
-customElements.define('detail-page', DetailPage);
+customElements.define('new-page', NewPage);

@@ -7,6 +7,14 @@ export const routes = [
       await import('../pages/list-page.js')
     }
   },
+    {
+    path: '/new/:uid',
+    name: 'new',
+    component: 'new-page',
+    action: async () => {
+      await import('../pages/new-page.js')
+    }
+  },
   {
     path: '/detail/:name',
     name: 'detail',
@@ -15,12 +23,4 @@ export const routes = [
       await import('../pages/detail-page.js')
     }
   },
-  {
-    path: '/new/:id',
-    name: 'detail-new',
-    component: 'detail-page',
-    action: async () => {
-      await import('../pages/detail-page.js')
-    }
-  }
 ];

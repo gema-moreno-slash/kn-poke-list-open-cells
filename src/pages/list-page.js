@@ -103,7 +103,7 @@ class ListPage extends LitElement {
 
     getFilterFromPath() {
         const url = new URL(window.location.href);
-        const filter = url.searchParams.get('filter') !== null ? url.searchParams.get('list') : 'list';
+        const filter = url.searchParams.get('filter') !== null ? url.searchParams.get('filter') : 'list';
         return filter;
     }
 
@@ -196,9 +196,11 @@ class ListPage extends LitElement {
     // -- Handler Btns -- //
 
     clickDetail(poke) {
-        this.isNew ?
-            this.pageController.navigate('detail-new', { id: poke.id }) :
+        if(this.isNew) {
+            this.pageController.navigate('new', { uid: poke.id }) 
+        } else {
             this.pageController.navigate('detail', { name: poke.name })
+        }
     }
 
     filterList(e) {

@@ -44,9 +44,6 @@ class NewPokeModal extends LitElement {
     }
 
     render() {
-        const test = {
-            name: 'periko'
-        }
         return html`
             <base-modal
                 title="Create New Pokemon"
@@ -56,7 +53,6 @@ class NewPokeModal extends LitElement {
                     <fieldset ?disabled=${this.disabled}>
                         <div>
                             <poke-form 
-                                .initial=${test}
                                 @update=${this.updateForm}
                                 @error=${this.errorForm}
                             >
